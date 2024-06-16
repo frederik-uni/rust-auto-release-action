@@ -84,7 +84,7 @@ jobs:
 
       - name: Get latest release tag
         id: get_latest_release
-        run: echo "latest_tag=$(curl -s https://api.github.com/repos/${{ github.repository }}/tags | jq -r '.[0].name')" >> $GITHUB_ENV
+        run: echo "latest_tag=$(curl -s https://api.github.com/repos/${{ github.repository }}/tags | jq -r '.[0].name // "0.0.0"')" >> $GITHUB_ENV
 
       - name: Compare versions
         id: compare_versions
@@ -105,9 +105,6 @@ jobs:
         with:
           merge-multiple: true
           path: "./builds"
-
-      - name: Display structure of downloaded files
-        run: ls -R ./builds
       - name: Create release
         if: env.greater == 1
         uses: ncipollo/release-action@v1
